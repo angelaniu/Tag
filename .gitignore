@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# JetBrains / IntelliJ / PyCharm
+.idea/
+*.iml
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
