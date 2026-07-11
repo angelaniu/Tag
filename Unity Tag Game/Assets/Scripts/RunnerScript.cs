@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -15,7 +16,6 @@ public class RunnerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
     }
 
     void FixedUpdate()
@@ -43,8 +43,8 @@ public class RunnerScript : MonoBehaviour
         RunnerBody.linearVelocity = movement * MoveSpeed;
     }
 
-    private void returnStationary()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        RunnerBody.linearVelocity = Vector2.zero;
+        //Die
     }
 }
