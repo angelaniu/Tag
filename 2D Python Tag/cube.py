@@ -57,66 +57,89 @@ class Cube:
             self.y_velocity = 0 
         
         # Don't allow cube to fall beneath another cube
-        if (self.tl_square_y + self.size > otherCube.tl_square_y and self.tl_square_y < otherCube.tl_square_y
+        if (self.tl_square_y + self.size >= otherCube.tl_square_y and self.tl_square_y <= otherCube.tl_square_y
             and (
                 (self.tl_square_x <= otherCube.tl_square_x and otherCube.tl_square_x <= self.tl_square_x + self.size)
                 or (otherCube.tl_square_x <= self.tl_square_x and self.tl_square_x <= otherCube.tl_square_x + otherCube.size)
-                )
+            )
+            # Prevent this cube from being placed above the other cube when this cube is jumping from below
+            and (
+                self.y_velocity > 0
+            )
         ):
-            # Make the cubes stack 
-            self.tl_square_y = otherCube.tl_square_y - self.size
+            # If one cube falls below the other, make the cubes stack 
+            # print(f"Vertical Pre: other cube: ({otherCube.tl_square_x},{otherCube.tl_square_y}), this cube ({self.tl_square_x},{self.tl_square_y})")
+            # Leave a single pixel difference between both cubes to prevent edge cases on corners
+            self.tl_square_y = otherCube.tl_square_y - self.size - 1
             self.y_velocity = 0
-            
+            # print(f"Vertical Post: other cube: ({otherCube.tl_square_x},{otherCube.tl_square_y}), this cube ({self.tl_square_x},{self.tl_square_y})")
+    
+    def horizontal_movement(self, force, display, otherCube):
+        """
+        Helper function of horizontal_physics 
+        Adjusts x-coordinate of cube depending on type of force (air resistance, or ground friction)
+        """
+        # Allow velocity to reach 0 and not bounce back and forth 
+        if abs(self.x_velocity) < force:
+            self.x_velocity = 0 
 
-    def horizontal_physics(self, display):
+        # If velocity is moving left
+        elif self.x_velocity < 0:
+            self.x_velocity += force
+            self.tl_square_x += self.x_velocity
+            # Don't allow square to move past left wall
+            if self.tl_square_x < display.left_wall:
+                self.tl_square_x = display.left_wall
+                self.x_velocity = 0
+            # Don't allow this cube to move left into another cube
+            if (
+                otherCube.tl_square_x + otherCube.size >= self.tl_square_x and otherCube.tl_square_x <= self.tl_square_x
+                and (
+                    (otherCube.tl_square_y <= self.tl_square_y + self.size <= otherCube.tl_square_y + otherCube.size)
+                    or 
+                    (otherCube.tl_square_y <= self.tl_square_y <= otherCube.tl_square_y + otherCube.size)
+                )
+            ):
+                
+                # print(f"Hori Pre: other cube: ({otherCube.tl_square_x},{otherCube.tl_square_y}), this cube ({self.tl_square_x},{self.tl_square_y})")
+                self.x_velocity = 0 
+                # Leave a single pixel difference between both cubes to prevent edge cases on corners
+                self.tl_square_x = otherCube.tl_square_x + otherCube.size + 1
+                # print(f"Hori Post: other cube: ({otherCube.tl_square_x},{otherCube.tl_square_y}), this cube ({self.tl_square_x},{self.tl_square_y})")
+
+        # If velocity is moving right 
+        elif self.x_velocity > 0:
+            self.x_velocity -= force
+            self.tl_square_x += self.x_velocity
+            # Don't allow square to move past right wall
+            if (self.tl_square_x + self.size) > display.right_wall:
+                self.tl_square_x = display.right_wall - self.size
+                self.x_velocity = 0
+            
+            # Don't allow square to move right into another cube 
+            if (
+                self.tl_square_x + self.size >= otherCube.tl_square_x and self.tl_square_x <= otherCube.tl_square_x
+                and (
+                    (self.tl_square_y <= otherCube.tl_square_y <= self.tl_square_y + self.size)
+                    or
+                    (otherCube.tl_square_y <= self.tl_square_y <= otherCube.tl_square_y + otherCube.size)
+                )
+            ):
+                self.x_velocity = 0 
+                self.tl_square_x = otherCube.tl_square_x - self.size - 1
+                
+
+
+    def horizontal_physics(self, display, otherCube):
         """
         Adjusts x-coordinate of cube after horizontal jump
         """
         # If cube is on the ground, use ground friction
         if self.tl_square_y + self.size == display.ground:
-            # Allow velocity to reach 0 and not bounce back and forth 
-            if abs(self.x_velocity) < display.friction:
-                self.x_velocity = 0 
-
-            # If velocity is moving left
-            elif self.x_velocity < 0:
-                self.x_velocity += display.friction
-                self.tl_square_x += self.x_velocity
-                # Don't allow square to move past left wall
-                if self.tl_square_x < display.left_wall:
-                    self.tl_square_x = display.left_wall
-                    self.x_velocity = 0
-
-            # If velocity is moving right 
-            elif self.x_velocity > 0:
-                self.x_velocity -= display.friction 
-                self.tl_square_x += self.x_velocity
-                # Don't allow square to move past right wall
-                if (self.tl_square_x + self.size) > display.right_wall:
-                    self.tl_square_x = display.right_wall - self.size
-                    self.x_velocity = 0
+            self.horizontal_movement(display.friction, display, otherCube)
 
         # If cube is in air, use air resistance
         else:
-            # Allow velocity to reach 0 and not bounce back and forth 
-            if abs(self.x_velocity) < display.air_resistance:
-                self.x_velocity = 0 
-
-            # If velocity is moving left
-            elif self.x_velocity < 0:
-                self.x_velocity += display.air_resistance
-                self.tl_square_x += self.x_velocity
-                # Don't allow square to move past left wall
-                if self.tl_square_x < display.left_wall:
-                    self.tl_square_x = display.left_wall
-                    self.x_velocity = 0
-
-            # If velocity is moving right 
-            elif self.x_velocity > 0:
-                self.x_velocity -= display.air_resistance
-                self.tl_square_x += self.x_velocity
-                # Don't allow square to move past right wall
-                if (self.tl_square_x + self.size) > display.right_wall:
-                    self.tl_square_x = display.right_wall - self.size
-                    self.x_velocity = 0
+            self.horizontal_movement(display.air_resistance, display, otherCube)
+    
 

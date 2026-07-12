@@ -15,7 +15,7 @@ game = Display (
     left_wall = 10,
     right_wall = 790,
     gravity = 0.15,
-    air_resistance = 0.04,
+    air_resistance = 0.03,
     friction = 0.1
 )
 
@@ -70,8 +70,8 @@ while running:
     orange_cube.vertical_physics(game, blue_cube)
 
     # Apply physics to horizontal jump 
-    blue_cube.horizontal_physics(game)
-    orange_cube.horizontal_physics(game)
+    blue_cube.horizontal_physics(game, orange_cube)
+    orange_cube.horizontal_physics(game, blue_cube)
 
     # Paint window and draw ground 
     screen.fill((255, 255, 255))
@@ -90,6 +90,7 @@ while running:
         rect = (blue_cube.tl_square_x, blue_cube.tl_square_y, blue_cube.size, blue_cube.size),
         width = 0
     )
+    
     # Update screen display
     pygame.display.flip()
 
