@@ -1,7 +1,7 @@
 """
 This class describes the forces and setting of the game 
 """
-class Display:
+class Settings:
     def __init__(self, display_width, display_height, ground, left_wall, right_wall, gravity, air_resistance, friction):
         """
         Constructs the setting of the game
