@@ -2,9 +2,11 @@
 This class creates a cube and handles cube movements in the tag game. 
 """
 import pygame
+from settings import Graphic_Helper
 
 # Colours
 RED = (227, 65, 65)
+WHITE = (255, 255, 255)
 
 class Cube:
     def __init__(self, tl_square_x, tl_square_y, color, size, is_tagger):
@@ -73,7 +75,6 @@ class Cube:
             )
         ):
             # If one cube falls below the other, make the cubes stack 
-            # print(f"Vertical Pre: other cube: ({otherCube.tl_square_x},{otherCube.tl_square_y}), this cube ({self.tl_square_x},{self.tl_square_y})")
             # Leave a single pixel difference between both cubes to prevent edge cases on corners
             self.tl_square_y = otherCube.tl_square_y - self.size - 1
             self.y_velocity = 0
@@ -157,6 +158,21 @@ class Cube:
         # If this cube is a tagger, the other cube is dead
         else:
             otherCube.is_dead = True
+    
+    @staticmethod
+    def display_collision (screen):
+        Graphic_Helper.rect_with_msg(
+            str_msg = "Game over",
+            x = 200,
+            y = 40,
+            width = 400,
+            length = 50,
+            screen = screen,
+            bg_color = RED,
+            font = "freesansbold.ttf",
+            font_size = 40, 
+            text_color = WHITE
+        )
 
     def display_cube(self, screen):
         """
