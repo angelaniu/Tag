@@ -2,7 +2,15 @@
 The class records the timer and training iteration in the game
 """
 class Scoreboard:
-    def __init__(self, x_coord, y_coord, seconds):
+    def __init__(
+            self,
+            x_coord,
+            y_coord,
+            length,
+            width,
+            color,
+            timer,
+        ):
         """
         Constructs the scoreboard at the back of the game display 
         x_coord: the x-coordinate of the top left corner of the board 
@@ -14,7 +22,10 @@ class Scoreboard:
         """
         self.x_coord = x_coord
         self.y_coord = y_coord
-        self.seconds = seconds
+        self.length = length
+        self.width = width
+        self.color = color
+        self.timer = timer
         self.iteration = 0
         self.p1_wins = 0
         self.p2_wins = 0 

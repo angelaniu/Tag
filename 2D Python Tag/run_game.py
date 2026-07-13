@@ -5,6 +5,8 @@ Run this file to start the tag game
 import pygame
 from cube import Cube
 from display import Display
+from scoreboard import Scoreboard
+from timer import Timer
 
 
 # Create game display 
@@ -21,7 +23,7 @@ game = Display (
 
 # Create cube to be tagged
 blue_cube = Cube (
-    tl_square_x = 100,
+    tl_square_x = 150,
     tl_square_y = 500,
     color = (173, 216, 230),
     size = 50,
@@ -30,11 +32,30 @@ blue_cube = Cube (
 
 # Create tagger cube
 orange_cube = Cube(
-    tl_square_x = 650,
+    tl_square_x = 600,
     tl_square_y = 500,
     color = (255, 172, 28),
     size = 50,
     is_tagger = True
+)
+
+# Create timer 
+timer = Timer (
+    x_coord = 250,
+    y_coord = 120,
+    length = 150,
+    width = 300,
+    seconds = 20, 
+    color = (240, 240, 240)
+)
+# Create scoreboard 
+scoreboard = Scoreboard(
+    x_coord = 200,
+    y_coord = 100,
+    length = 200,
+    width = 400,
+    color = (250, 231, 255),
+    timer = timer
 )
 
 pygame.init()
@@ -73,9 +94,21 @@ while running:
     blue_cube.horizontal_physics(game, orange_cube)
     orange_cube.horizontal_physics(game, blue_cube)
 
-    # Paint window and draw ground 
+    # Paint display
     screen.fill((255, 255, 255))
     pygame.draw.rect(screen, (211, 211, 211), (0, 550, 800, 100), 0)
+    pygame.draw.rect(
+        surface = screen,
+        color = scoreboard.color,
+        rect = (scoreboard.x_coord, scoreboard.y_coord, scoreboard.width, scoreboard.length),
+        width = 0
+    )
+    pygame.draw.rect(
+        surface = screen, 
+        color = timer.color,
+        rect = (timer.x_coord, timer.y_coord, timer.width, timer.length),
+        width = 0
+    )
 
     # Paint cubes
     pygame.draw.rect(
@@ -90,7 +123,7 @@ while running:
         rect = (blue_cube.tl_square_x, blue_cube.tl_square_y, blue_cube.size, blue_cube.size),
         width = 0
     )
-    
+
     # Update screen display
     pygame.display.flip()
 
