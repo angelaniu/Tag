@@ -2,6 +2,7 @@
 This class holds a timer that counts down
 """
 import pygame
+from settings import Graphic_Helper
 
 # Colours
 BLACK = (0,0,0)
@@ -25,33 +26,19 @@ class Timer:
         """
         This method draws the timer onto the game screen
         """
-        # Create rectangle to put text on top of 
-        rect = pygame.Rect(self.x_coord, self.y_coord, self.width, self.length)
-        pygame.draw.rect (
-            surface = screen,
-            color = self.color,
-            rect = rect,
-            width = 0 
+        Graphic_Helper.rect_with_msg(
+            str_msg = str(self.current_time),
+            x = self.x_coord,
+            y = self.y_coord,
+            width = self.width,
+            length = self.length,
+            screen = screen,
+            bg_color = self.color,
+            font = self.font,
+            font_size = self.font_size,
+            text_color = BLACK
         )
-        # Initialize font
-        timer_font = pygame.font.SysFont (
-            name = self.font,
-            size = self.font_size,
-            bold = True
-        )
-        # Create text
-        text = timer_font.render (
-            str(self.current_time),
-            True, # adds some text smoothing
-            BLACK
-        )
-        # Center the text on top of the previous rectangle
-        text_box = text.get_rect()
-        text_box.center = rect.center
-
-        # Display text
-        screen.blit(text, text_box)
-
+        
     
     
     

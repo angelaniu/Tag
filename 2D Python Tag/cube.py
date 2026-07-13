@@ -77,11 +77,9 @@ class Cube:
             # Leave a single pixel difference between both cubes to prevent edge cases on corners
             self.tl_square_y = otherCube.tl_square_y - self.size - 1
             self.y_velocity = 0
-            # Cube touching means game is over for the one getting tagged
-            if self.is_tagger == False: 
-                self.is_dead = True
-            # print(f"Vertical Post: other cube: ({otherCube.tl_square_x},{otherCube.tl_square_y}), this cube ({self.tl_square_x},{self.tl_square_y})")
-    
+            # During collision one cube dies
+            self.cube_collision(otherCube)
+
     def horizontal_movement(self, force, settings, otherCube):
         """
         Helper function of horizontal_physics 
@@ -108,15 +106,11 @@ class Cube:
                     (otherCube.tl_square_y <= self.tl_square_y <= otherCube.tl_square_y + otherCube.size)
                 )
             ):
-                
-                # print(f"Hori Pre: other cube: ({otherCube.tl_square_x},{otherCube.tl_square_y}), this cube ({self.tl_square_x},{self.tl_square_y})")
                 self.x_velocity = 0 
                 # Leave a single pixel difference between both cubes to prevent edge cases on corners
                 self.tl_square_x = otherCube.tl_square_x + otherCube.size + 1
-                # Cube touching means game is over for the one getting tagged
-                if self.is_tagger == False: 
-                    self.is_dead = True
-                # print(f"Hori Post: other cube: ({otherCube.tl_square_x},{otherCube.tl_square_y}), this cube ({self.tl_square_x},{self.tl_square_y})")
+                # During collision one cube dies
+                self.cube_collision(otherCube)
 
         # If velocity is moving right 
         elif self.x_velocity > 0:
@@ -127,7 +121,7 @@ class Cube:
                 self.tl_square_x = settings.right_wall - self.size
                 self.x_velocity = 0
             
-            # Don't allow square to move right into another cube 
+            # During collision don't allow square to move right into another cube 
             if (
                 self.tl_square_x + self.size >= otherCube.tl_square_x and self.tl_square_x <= otherCube.tl_square_x
                 and (
@@ -138,9 +132,8 @@ class Cube:
             ):
                 self.x_velocity = 0 
                 self.tl_square_x = otherCube.tl_square_x - self.size - 1
-                # Cube touching means game is over for the one getting tagged
-                if self.is_tagger == False: 
-                    self.is_dead = True
+                # During collision one cube dies
+                self.cube_collision(otherCube)
 
     def horizontal_physics(self, settings, otherCube):
         """
@@ -154,6 +147,17 @@ class Cube:
         else:
             self.horizontal_movement(settings.air_resistance, settings, otherCube)
     
+    def cube_collision(self, otherCube):
+        """
+        This method sets a cube to dead state when a collision occurs
+        """
+        # If this cube is not a tagger, this cube is dead
+        if self.is_tagger == False: 
+            self.is_dead = True
+        # If this cube is a tagger, the other cube is dead
+        else:
+            otherCube.is_dead = True
+
     def display_cube(self, screen):
         """
         This method draws a cube on the game screen

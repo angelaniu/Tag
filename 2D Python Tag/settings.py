@@ -1,6 +1,8 @@
 """
 This class describes the forces and setting of the game 
 """
+BLACK = (0, 0, 0)
+import pygame
 class Settings:
     def __init__(self, display_width, display_height, ground, left_wall, right_wall, gravity, air_resistance, friction):
         """
@@ -22,5 +24,50 @@ class Settings:
         self.gravity = gravity 
         self.air_resistance = air_resistance
         self.friction = friction
+    
+class Graphic_Helper:
+    @staticmethod
+    def insert_medium_txt(str_msg, x, y, screen, font, font_size, text_color):
+        # Initialize font 
+        font = pygame.font.SysFont(
+            name = font,
+            size = font_size,
+            bold = False
+        )
+        # Write message 
+        text = font.render(
+            str_msg,
+            True,
+            text_color
+        )
+        # Display message
+        screen.blit(text, (x,y))
 
+    @staticmethod
+    def rect_with_msg(str_msg, x, y, width, length, screen, bg_color, font, font_size, text_color):
+        # Create rectangle to put text on top of 
+        rect = pygame.Rect(x, y, width, length)
+        pygame.draw.rect (
+            surface = screen,
+            color = bg_color,
+            rect = rect,
+            width = 0 
+        )
+        # Initialize font 
+        font = pygame.font.SysFont(
+            name = font,
+            size = font_size,
+            bold = True
+        )
+        # Create text message 
+        text = font.render (
+            str_msg,
+            True,
+            text_color
+        )
+        # Center the text on top of the previous rectangle
+        text_box = text.get_rect()
+        text_box.center = rect.center
 
+        #Display text
+        screen.blit(text, text_box)

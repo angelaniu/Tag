@@ -2,11 +2,13 @@
 The class records the timer and training iteration in the game
 """
 import pygame
+from settings import Graphic_Helper
 
 # Colours
 BLACK = (0,0,0)
 ORANGE = (255, 172, 28)
 BLUE = (173, 216, 230)
+RED = (227, 65, 65)
 
 class Scoreboard:
     def __init__(self, x_coord, y_coord, length, width, color, font, font_size):
@@ -41,31 +43,34 @@ class Scoreboard:
             rect = (self.x_coord, self.y_coord, self.width, self.length),
             width = 0
         )
-        # Initialize font 
-        scoreboard_font = pygame.font.SysFont(
-            name = self.font,
-            size = self.font_size,
-            bold = False
+        Graphic_Helper.insert_medium_txt(
+            str_msg = "Current iteration: " + str(self.iteration),
+            x = 230, 
+            y = 215,
+            screen = screen,
+            font = self.font,
+            font_size = 28,
+            text_color = BLACK
         )
-        # Write current iteration
-        iteration_text = scoreboard_font.render(
-            "Current iteration: " + str(self.iteration),
-            True,
-            BLACK
+        Graphic_Helper.insert_medium_txt(
+            str_msg = "Orange wins: " + str(self.o_wins),
+            x = 230, 
+            y = 243,
+            screen = screen,
+            font = self.font,
+            font_size = 28,
+            text_color = ORANGE
         )
-        screen.blit(iteration_text, (230, 215) )
+        Graphic_Helper.insert_medium_txt(
+            str_msg = "Blue wins: " + str(self.b_wins),
+            x = 230, 
+            y = 271,
+            screen = screen,
+            font = self.font,
+            font_size = 28,
+            text_color = BLUE
+        )
+  
 
-        # Write number of orange wins 
-        owins_text = scoreboard_font.render(
-            "Orange wins: " + str(self.o_wins),
-            True,
-            ORANGE
-        )
-        screen.blit(owins_text, (230, 243))
-        # Write number of blue wins 
-        bwins_text = scoreboard_font.render(
-            "Blue wins: " + str(self.b_wins),
-            True,
-            BLUE
-        )
-        screen.blit(bwins_text, (230, 271))
+
+        
