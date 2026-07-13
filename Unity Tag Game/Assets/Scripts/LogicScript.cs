@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LogicScript : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class LogicScript : MonoBehaviour
     public Text RunnerScoreText;
     private Player tagger;
     private Player runner;
+    public GameObject gameOverScreen;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,7 +22,7 @@ public class LogicScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     [ContextMenu("Increase Tagger Score")]
@@ -32,5 +35,14 @@ public class LogicScript : MonoBehaviour
     private void IncreaseRunnerScore()
     {
         runner.addScore();
+    }
+    public void restartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void gameOver()
+    {
+        gameOverScreen.SetActive(true);
     }
 }
