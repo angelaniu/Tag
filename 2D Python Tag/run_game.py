@@ -71,7 +71,6 @@ scoreboard = Scoreboard (
 pygame.init()
 screen = pygame.display.set_mode((game_settings.width, game_settings.height))
 running = True
-
 # Actions per frame of the game when activated 
 while running:
     for event in pygame.event.get():
@@ -104,13 +103,17 @@ while running:
     blue_cube.horizontal_physics(game_settings, orange_cube)
     orange_cube.horizontal_physics(game_settings, blue_cube)
 
+    # Display time
+    timer.current_time = pygame.time.get_ticks() // 1000
+    timer.current_time = max(0, timer.seconds - timer.current_time)
+
     # Paint screen and ground 
     screen.fill(WHITE)
     pygame.draw.rect(screen, LIGHT_GRAY, (0, 550, 800, 100), 0)
     # If collision occurs, display game over
     if (blue_cube.is_dead):
         Cube.display_collision(screen)
-        
+
     # Paint objects 
     scoreboard.display_scoreboard(screen)
     timer.display_timer(screen)
