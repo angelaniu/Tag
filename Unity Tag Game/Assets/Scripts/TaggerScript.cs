@@ -1,15 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TaggerScript : MonoBehaviour
+public class TaggerScript : Player
 {
-    public Rigidbody2D TaggerBody;
-    public float MoveSpeed;
-    public bool tagged = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        SetArrowControls();
     }
 
     // Update is called once per frame
@@ -19,34 +17,7 @@ public class TaggerScript : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if (!tagged)
-        {
-            Vector2 movement = Vector2.zero;
-
-            if (Keyboard.current.wKey.isPressed)
-            {
-                movement.y += 1;
-            }
-            if (Keyboard.current.sKey.isPressed)
-            {
-                movement.y -= 1;
-            }
-            if (Keyboard.current.aKey.isPressed)
-            {
-                movement.x -= 1;
-            }
-            if (Keyboard.current.dKey.isPressed)
-            {
-                movement.x += 1;
-            }
-
-            movement = movement.normalized;
-            TaggerBody.linearVelocity = movement * MoveSpeed;
-        }
-        else
-        {
-            TaggerBody.linearVelocity = Vector2.zero;
-        }
+        Move();
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
@@ -56,4 +27,10 @@ public class TaggerScript : MonoBehaviour
             tagged = true;
         }
     }
+    [ContextMenu("Increase Tagger Score")]
+    private void IncreaseTaggerScore()
+    {
+        addScore();
+    }
+
 }

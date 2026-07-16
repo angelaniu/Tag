@@ -5,37 +5,40 @@ using UnityEngine.SceneManagement;
 
 public class LogicScript : MonoBehaviour
 {
-    public Text TaggerScoreText;
-    public Text RunnerScoreText;
-    private Player tagger;
-    private Player runner;
+    public Text timer;
     public GameObject gameOverScreen;
+    public int minutes;
+    public int seconds;
+    private float time;
+    private bool gameStatus;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        tagger = new Player("Tagger", TaggerScoreText);
-        runner = new Player("Runner", RunnerScoreText);
+        timer.text = minutes.ToString() + ":" + seconds.ToString("D2");
+        gameStatus = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        time += Time.deltaTime;
+        
+        if(time >= 1f)
+        {
+            time -= 1f;
+            if (gameStatus)
+            {
+                countdown();
+            }
+        }
+        if(minutes == 0 && seconds == 0)
+        {
+            gameOver();
+        }
     }
 
-    [ContextMenu("Increase Tagger Score")]
-    private void IncreaseTaggerScore()
-    {
-        tagger.addScore();
-    }
-
-    [ContextMenu("Increase Runner Score")]
-    private void IncreaseRunnerScore()
-    {
-        runner.addScore();
-    }
     public void restartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -43,6 +46,18 @@ public class LogicScript : MonoBehaviour
 
     public void gameOver()
     {
+        gameStatus = false;
         gameOverScreen.SetActive(true);
     }
+
+    public void countdown()
+    {
+        if(seconds == 0){
+            minutes--;
+            seconds = 60;
+        }
+        seconds--;
+        timer.text = minutes.ToString() + ":" + seconds.ToString("D2");
+    }
 }
+
