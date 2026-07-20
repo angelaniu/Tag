@@ -606,7 +606,11 @@ MonoBehaviour:
         m_SelectedSource:
           rid: -2
         m_Provider2DCache:
-          rid: -2
+          rid: 7207365070671839304
+    - rid: 7207365070671839304
+      type: {class: 'Provider2DCache`1[[UnityEngine.Rendering.Universal.Light2DProvider, Unity.RenderPipelines.Universal.2D.Runtime]]', ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_Cache: []
 --- !u!4 &619394802
 Transform:
   m_ObjectHideFlags: 0
@@ -995,7 +999,6 @@ MonoBehaviour:
   rigidBody: {fileID: 1202960624}
   tagged: 0
   MoveSpeed: 5
-  TaggerBody: {fileID: 1202960624}
 --- !u!61 &1202960623
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1349,8 +1352,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   timer: {fileID: 606449512}
   gameOverScreen: {fileID: 1495047887}
-  minutes: 1
-  seconds: 1
+  minutes: 0
+  seconds: 10
 --- !u!4 &2113137616
 Transform:
   m_ObjectHideFlags: 0
