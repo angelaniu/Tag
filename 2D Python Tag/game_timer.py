@@ -38,6 +38,11 @@ class Timer:
             font_size = self.font_size,
             text_color = BLACK
         )
+    def reset_timer (self):
+        """
+        This method resets the timer to its original settings
+        """
+        self.current_time = self.seconds
         
     
     

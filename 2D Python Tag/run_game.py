@@ -18,6 +18,8 @@ BLUE = (173, 216, 230)
 DARK_ORANGE = (255, 86, 0)
 DARK_BLUE = (0, 161, 255)
 
+
+
 # Create game display 
 game_settings = Settings (
     display_width = 800,
@@ -60,7 +62,7 @@ timer = Timer (
     y_coord = 120,
     length = 80,
     width = 300,
-    seconds = 3,  #Change to 20 seconds later
+    seconds = 10,  #Change to 20 seconds later
     color = DARK_PURPLE,
     font = "freesansbold.ttf",
     font_size = 70
@@ -125,12 +127,9 @@ while running:
         orange_cube.is_dead = True
         Cube.display_game_over(screen)
         
-
-
     # If collision was detected earlier, the tagged cube dies and game is over
     if blue_cube.is_dead:
         Cube.display_game_over(screen)
-        
 
     # Paint objects 
     scoreboard.display_scoreboard(screen)
