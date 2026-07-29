@@ -15,6 +15,8 @@ LIGHT_PURPLE = (250, 231, 255)
 DARK_PURPLE = (202, 126, 224)
 ORANGE = (255, 172, 28)
 BLUE = (173, 216, 230)
+DARK_ORANGE = (255, 86, 0)
+DARK_BLUE = (0, 161, 255)
 
 # Create game display 
 game_settings = Settings (
@@ -28,20 +30,22 @@ game_settings = Settings (
     friction = 0.1
 )
 
-# Create cube to be tagged
+# Create blue cube to be tagged
 blue_cube = Cube (
     tl_square_x = 150,
     tl_square_y = 500,
-    color = (173, 216, 230),
+    color = BLUE,
+    dead_color = DARK_BLUE,
     size = 50,
     is_tagger = False
 )
 
-# Create tagger cube
+# Create orange tagger cube
 orange_cube = Cube (
     tl_square_x = 600,
     tl_square_y = 500,
     color = ORANGE,
+    dead_color = DARK_ORANGE,
     size = 50,
     is_tagger = True
 )
@@ -52,7 +56,7 @@ timer = Timer (
     y_coord = 120,
     length = 80,
     width = 300,
-    seconds = 20, 
+    seconds = 3,  #Change to 20 seconds later
     color = DARK_PURPLE,
     font = "freesansbold.ttf",
     font_size = 70
@@ -106,13 +110,24 @@ while running:
     # Display time
     timer.current_time = pygame.time.get_ticks() // 1000
     timer.current_time = max(0, timer.seconds - timer.current_time)
+    print(timer.current_time)
 
     # Paint screen and ground 
     screen.fill(WHITE)
     pygame.draw.rect(screen, LIGHT_GRAY, (0, 550, 800, 100), 0)
-    # If collision occurs, display game over
-    if (blue_cube.is_dead):
-        Cube.display_collision(screen)
+    
+
+    # If the timer reaches 0, tagger cube dies and game is over
+    if timer.current_time == 0:
+        orange_cube.is_dead = True
+        Cube.display_game_over(screen)
+        
+
+
+    # If collision was detected earlier, the tagged cube dies and game is over
+    if blue_cube.is_dead:
+        Cube.display_game_over(screen)
+        
 
     # Paint objects 
     scoreboard.display_scoreboard(screen)

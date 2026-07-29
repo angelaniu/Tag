@@ -7,9 +7,11 @@ from settings import Graphic_Helper
 # Colours
 RED = (227, 65, 65)
 WHITE = (255, 255, 255)
+DARK_ORANGE = (255, 116, 0)
+DARK_BLUE = (38, 185, 235)
 
 class Cube:
-    def __init__(self, tl_square_x, tl_square_y, color, size, is_tagger):
+    def __init__(self, tl_square_x, tl_square_y, color, dead_color, size, is_tagger):
         """
         Initializes a cube 
         tl_square_x: x coordinate of top left corner of cube 
@@ -26,6 +28,7 @@ class Cube:
         self.tl_square_x = tl_square_x
         self.tl_square_y = tl_square_y
         self.color = color
+        self.dead_color = dead_color
         self.size = size 
         self.is_tagger = is_tagger
 
@@ -160,7 +163,10 @@ class Cube:
             otherCube.is_dead = True
     
     @staticmethod
-    def display_collision (screen):
+    def display_game_over (screen):
+        """
+        This method displays a game over banner at the top of the screen
+        """
         Graphic_Helper.rect_with_msg(
             str_msg = "Game over",
             x = 200,
@@ -178,14 +184,14 @@ class Cube:
         """
         This method draws a cube on the game screen
         """
-        # If the cube is dead, color the cube red
+        # If the cube is dead, color the cube with their dead color 
         if self.is_dead == True: 
             pygame.draw.rect(
                 surface = screen, 
-                color = RED, 
+                color = self.dead_color, 
                 rect = (self.tl_square_x, self.tl_square_y, self.size, self.size),
                 width = 0
-            )   
+                )  
         # If cube is alive, color normally 
         else:
             pygame.draw.rect(
