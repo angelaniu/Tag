@@ -32,6 +32,8 @@ game_settings = Settings (
 
 # Create blue cube to be tagged
 blue_cube = Cube (
+    tl_square_x_init = 150, 
+    tl_square_y_init = 500,
     tl_square_x = 150,
     tl_square_y = 500,
     color = BLUE,
@@ -42,6 +44,8 @@ blue_cube = Cube (
 
 # Create orange tagger cube
 orange_cube = Cube (
+    tl_square_x_init = 600, 
+    tl_square_y_init = 500,
     tl_square_x = 600,
     tl_square_y = 500,
     color = ORANGE,
@@ -110,7 +114,6 @@ while running:
     # Display time
     timer.current_time = pygame.time.get_ticks() // 1000
     timer.current_time = max(0, timer.seconds - timer.current_time)
-    print(timer.current_time)
 
     # Paint screen and ground 
     screen.fill(WHITE)

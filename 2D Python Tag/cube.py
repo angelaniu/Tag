@@ -11,7 +11,7 @@ DARK_ORANGE = (255, 116, 0)
 DARK_BLUE = (38, 185, 235)
 
 class Cube:
-    def __init__(self, tl_square_x, tl_square_y, color, dead_color, size, is_tagger):
+    def __init__(self, tl_square_x_init, tl_square_y_init, tl_square_x, tl_square_y, color, dead_color, size, is_tagger):
         """
         Initializes a cube 
         tl_square_x: x coordinate of top left corner of cube 
@@ -24,7 +24,10 @@ class Cube:
         self.x_velocity = 0
         self.y_velocity = 0
         self.is_dead = False
-
+        # Track initial coordinates for the cube for reset
+        self.tl_square_x_init = tl_square_x_init
+        self.tl_square_y_init = tl_square_y_init
+        # Track the dynamic coordinates of the cube 
         self.tl_square_x = tl_square_x
         self.tl_square_y = tl_square_y
         self.color = color
@@ -179,6 +182,17 @@ class Cube:
             font_size = 40, 
             text_color = WHITE
         )
+
+    def reset_cube(self):
+        """
+        This method resets a cube to its original starting state at the start of each iteration
+        """
+        self.x_velocity = 0
+        self.y_velocity = 0
+        self.is_dead = False
+        self.tl_square_x = self.tl_square_x_init
+        self.tl_square_y = self.tl_square_y_init
+ 
 
     def display_cube(self, screen):
         """
