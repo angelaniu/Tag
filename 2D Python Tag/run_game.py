@@ -19,7 +19,7 @@ DARK_ORANGE = (255, 86, 0)
 DARK_BLUE = (0, 161, 255)
 
 
-
+# Initialize objects in this program 
 # Create game display 
 game_settings = Settings (
     display_width = 800,
@@ -78,66 +78,89 @@ scoreboard = Scoreboard (
     font_size = 28
 )
 
+# Initialize pygame 
 pygame.init()
 screen = pygame.display.set_mode((game_settings.width, game_settings.height))
-running = True
-# Actions per frame of the game when activated 
-while running:
-    for event in pygame.event.get():
-        # If user closes window, quit game
-        if event.type == pygame.QUIT:
+
+# Run iterations of the game 
+training = True
+while training:
+    # Reset positions of cubes, reset timer, and increment scoreboard properly before each iteration 
+    orange_cube.reset_cube()
+    blue_cube.reset_cube()
+    timer.reset_timer()
+    scoreboard.iteration += 1
+
+    # Begin each individual game 
+    running = True
+    iteration_start_tick = pygame.time.get_ticks()
+    # Actions per frame of the game when a game starts
+    while running:
+        for event in pygame.event.get():
+            # If user closes window, quit game
+            if event.type == pygame.QUIT:
+                running = False
+                training = False
+                break
+
+            # Check for key presses
+            if event.type == pygame.KEYDOWN:
+                # Movement for blue cube
+                if event.key == pygame.K_w:
+                    blue_cube.vertical_jump(game_settings, orange_cube)
+                if event.key == pygame.K_a:
+                    blue_cube.horizontal_jump("left", game_settings)
+                if event.key == pygame.K_d:
+                    blue_cube.horizontal_jump("right", game_settings)
+                # Movement for orange cube 
+                if event.key == pygame.K_UP:
+                    orange_cube.vertical_jump(game_settings, blue_cube)
+                if event.key == pygame.K_LEFT:
+                    orange_cube.horizontal_jump("left", game_settings)
+                if event.key == pygame.K_RIGHT:
+                    orange_cube.horizontal_jump("right", game_settings)
+            
+        # Apply vertical physics 
+        blue_cube.vertical_physics(game_settings, orange_cube)
+        orange_cube.vertical_physics(game_settings, blue_cube)
+
+        # Apply physics to horizontal jump 
+        blue_cube.horizontal_physics(game_settings, orange_cube)
+        orange_cube.horizontal_physics(game_settings, blue_cube)
+
+        # If collision occurred during previous jump, adjust scoreboard 
+        if blue_cube.is_dead:
+            scoreboard.o_wins += 1
+            
+        # If the timer reaches 0, tagger cube dies and game is over
+        if timer.current_time == 0:
+            orange_cube.is_dead = True
+            scoreboard.b_wins += 1
+
+        # Display time
+        current_tick = pygame.time.get_ticks()
+        current_sec = (current_tick - iteration_start_tick) // 1000 
+        timer.current_time = max(0, timer.seconds - current_sec)
+
+        # Paint screen and ground 
+        screen.fill(WHITE)
+        pygame.draw.rect(screen, LIGHT_GRAY, (0, 550, 800, 100), 0)
+
+        # Paint objects 
+        scoreboard.display_scoreboard(screen)
+        timer.display_timer(screen)
+        orange_cube.display_cube(screen)
+        blue_cube.display_cube(screen)
+
+        # Update screen display
+        pygame.display.flip()
+
+        # If either cube is dead, end game
+        if blue_cube.is_dead or orange_cube.is_dead:
+            Cube.display_game_over(screen)
+            # Freeze game for 1 seconds to prevent glitching
+            pygame.time.wait(1000) 
             running = False
 
-        # Check for key presses
-        if event.type == pygame.KEYDOWN:
-            # Movement for blue cube
-            if event.key == pygame.K_w:
-                blue_cube.vertical_jump(game_settings, orange_cube)
-            if event.key == pygame.K_a:
-                blue_cube.horizontal_jump("left", game_settings)
-            if event.key == pygame.K_d:
-                blue_cube.horizontal_jump("right", game_settings)
-            # Movement for orange cube 
-            if event.key == pygame.K_UP:
-                orange_cube.vertical_jump(game_settings, blue_cube)
-            if event.key == pygame.K_LEFT:
-                orange_cube.horizontal_jump("left", game_settings)
-            if event.key == pygame.K_RIGHT:
-                orange_cube.horizontal_jump("right", game_settings)
-            
-    # Apply vertical physics 
-    blue_cube.vertical_physics(game_settings, orange_cube)
-    orange_cube.vertical_physics(game_settings, blue_cube)
-
-    # Apply physics to horizontal jump 
-    blue_cube.horizontal_physics(game_settings, orange_cube)
-    orange_cube.horizontal_physics(game_settings, blue_cube)
-
-    # Display time
-    timer.current_time = pygame.time.get_ticks() // 1000
-    timer.current_time = max(0, timer.seconds - timer.current_time)
-
-    # Paint screen and ground 
-    screen.fill(WHITE)
-    pygame.draw.rect(screen, LIGHT_GRAY, (0, 550, 800, 100), 0)
-    
-
-    # If the timer reaches 0, tagger cube dies and game is over
-    if timer.current_time == 0:
-        orange_cube.is_dead = True
-        Cube.display_game_over(screen)
-        
-    # If collision was detected earlier, the tagged cube dies and game is over
-    if blue_cube.is_dead:
-        Cube.display_game_over(screen)
-
-    # Paint objects 
-    scoreboard.display_scoreboard(screen)
-    timer.display_timer(screen)
-    orange_cube.display_cube(screen)
-    blue_cube.display_cube(screen)
-
-    # Update screen display
-    pygame.display.flip()
-
 pygame.quit()
+
