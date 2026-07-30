@@ -62,7 +62,7 @@ timer = Timer (
     y_coord = 120,
     length = 80,
     width = 300,
-    seconds = 10,  #Change to 20 seconds later
+    seconds = 20,  #Change to 20 seconds later
     color = DARK_PURPLE,
     font = "freesansbold.ttf",
     font_size = 70
@@ -131,16 +131,16 @@ while training:
         # If collision occurred during previous jump, adjust scoreboard 
         if blue_cube.is_dead:
             scoreboard.o_wins += 1
-            
-        # If the timer reaches 0, tagger cube dies and game is over
-        if timer.current_time == 0:
-            orange_cube.is_dead = True
-            scoreboard.b_wins += 1
 
         # Display time
         current_tick = pygame.time.get_ticks()
         current_sec = (current_tick - iteration_start_tick) // 1000 
         timer.current_time = max(0, timer.seconds - current_sec)
+
+        # If the timer reaches 0, tagger cube dies and game is over
+        if timer.current_time == 0:
+            orange_cube.is_dead = True
+            scoreboard.b_wins += 1
 
         # Paint screen and ground 
         screen.fill(WHITE)
@@ -152,15 +152,16 @@ while training:
         orange_cube.display_cube(screen)
         blue_cube.display_cube(screen)
 
-        # Update screen display
-        pygame.display.flip()
-
         # If either cube is dead, end game
         if blue_cube.is_dead or orange_cube.is_dead:
             Cube.display_game_over(screen)
-            # Freeze game for 1 seconds to prevent glitching
+            # Update display and then freeze game for 1 second
+            pygame.display.flip()
             pygame.time.wait(1000) 
             running = False
-
+            
+        # If no death, can update screen immediately 
+        else: 
+            pygame.display.flip()
 pygame.quit()
 
